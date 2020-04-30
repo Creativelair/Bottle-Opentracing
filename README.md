@@ -1,6 +1,4 @@
-#################
-Bottle-OpenTracing
-#################
+# Bottle-OpenTracing
 
 This package enables distributed tracing in Bottle applications via `The OpenTracing Project`.
 It is heavily influenced by the [Flask Opentracing implementation](https://github.com/opentracing-contrib/python-flask).
@@ -10,9 +8,9 @@ Installation
 
 Run the following command:
 
-.. code-block:: 
-
-    $ pip install Bottle-Opentracing
+```
+$ pip install Bottle-Opentracing
+```
 
 Usage
 =====
@@ -28,59 +26,58 @@ Initialize
 
 `BottleTracing` wraps the tracer instance that's supported by opentracing. To create a `BottleTracing` object, you can either pass in a tracer object directly or a callable that returns the tracer object. For example:
 
-.. code-block:: python
+```python
+import opentracing
+from bottle_opentracing import BottleTracing
 
-    import opentracing
-    from bottle_opentracing import BottleTracing
-
-    opentracing_tracer = ## some OpenTracing tracer implementation
-    tracing = BottleTracing(opentracing_tracer, ...)
+opentracing_tracer = ## some OpenTracing tracer implementation
+tracing = BottleTracing(opentracing_tracer, ...)
+```
 
 or
 
-.. code-block:: python
+```python
+import opentracing
+from bottle_opentracing import BottleTracing
 
-    import opentracing
-    from bottle_opentracing import BottleTracing
+def initialize_tracer():
+    ...
+    return opentracing_tracer
 
-    def initialize_tracer():
-        ...
-        return opentracing_tracer
-
-    tracing = BottleTracing(initialize_tracer, ...)
-
+tracing = BottleTracing(initialize_tracer, ...)
+```
 
 Trace All Requests
 ------------------
 
-.. code-block:: python
+```python
+import opentracing
+from bottle_opentracing import BottleTracing
 
-    import opentracing
-    from bottle_opentracing import BottleTracing
+app = bottle.app()
 
-    app = bottle.app()
-
-    opentracing_tracer = ## some OpenTracing tracer implementation
-    tracing = BottleTracing(opentracing_tracer, True, app, [optional_args])
+opentracing_tracer = ## some OpenTracing tracer implementation
+tracing = BottleTracing(opentracing_tracer, True, app, [optional_args])
+```
 
 Trace Individual Requests
 -------------------------
 
-.. code-block:: python
+```python
+import opentracing
+from bottle_opentracing import BottleTracing
 
-    import opentracing
-    from bottle_opentracing import BottleTracing
+app = bottle.app()
 
-    app = bottle.app()
+opentracing_tracer = ## some OpenTracing tracer implementation  
+tracing = BottleTracing(opentracing_tracer)
 
-    opentracing_tracer = ## some OpenTracing tracer implementation  
-    tracing = BottleTracing(opentracing_tracer)
-
-    @app.get('/some_url')
-    @tracing.trace(optional_args)
-    def some_view_func():
-    	...     
-    	return some_view 
+@app.get('/some_url')
+@tracing.trace(optional_args)
+def some_view_func():
+	...     
+	return some_view 
+```
 
 Accessing Spans Manually
 ------------------------
@@ -92,14 +89,14 @@ Tracing an RPC
 
 If you want to make an RPC and continue an existing trace, you can inject the current span into the RPC. For example, if making an http request, the following code will continue your trace across the wire:
 
-.. code-block:: python
-
-    @tracing.trace()
-    def some_view_func(request):
-        new_request = some_http_request
-        current_span = tracing.get_span(request)
-        text_carrier = {}
-        opentracing_tracer.inject(span, opentracing.Format.TEXT_MAP, text_carrier)
-        for k, v in text_carrier.iteritems():
-            new_request.add_header(k,v)
-        ... # make request
+```python
+@tracing.trace()
+def some_view_func(request):
+    new_request = some_http_request
+    current_span = tracing.get_span(request)
+    text_carrier = {}
+    opentracing_tracer.inject(span, opentracing.Format.TEXT_MAP, text_carrier)
+    for k, v in text_carrier.iteritems():
+        new_request.add_header(k,v)
+    ... # make request
+```
