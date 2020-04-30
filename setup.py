@@ -17,7 +17,7 @@ setup(
     author_email='danijimenez010@gmail.com',
     description='OpenTracing support for Bottle applications',
     long_description=open('README.md').read(),
-    long_description_content_type='text/x-rst',
+    long_description_content_type='text/markdown',
     packages=['bottle_opentracing', 'tests'],
     zip_safe=False,
     include_package_data=True,
