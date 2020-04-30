@@ -19,13 +19,13 @@ class APMBottleApp(Bottle):
             with _tracer.start_active_span(request.path):
                 BottleTracing.add_request_tags(_tracer.active_span, request)
                 BottleTracing.add_response_tags(_tracer.active_span, res)
-                cls.notice_error(res.exception)
+                cls.notice_error(_tracer, res.exception)
 
     @classmethod
-    def notice_error(cls, err: Exception):
-        if cls.tracer and cls.tracer.active_span:
-            cls.tracer.active_span.set_tag(tags.ERROR, True)
-            cls.tracer.active_span.log_kv({
+    def notice_error(cls, tracer, err: Exception):
+        if tracer and tracer.active_span:
+            tracer.active_span.set_tag(tags.ERROR, True)
+            tracer.active_span.log_kv({
                 'event': tags.ERROR,
                 'error.object': err,
             })
