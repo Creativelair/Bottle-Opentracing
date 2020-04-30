@@ -6,12 +6,11 @@ Bottle-OpenTracing
 
 This extension provides simple integration of OpenTracing in Bottle applications.
 '''
-version = open('VERSION').read().strip()
 setup(
     name='Bottle-OpenTracing',
-    version=version,
+    version='0.0.4',
     url='https://github.com/Creativelair/Bottle-Opentracing',
-    download_url='https://github.com/Creativelair/Bottle-Opentracing/archive/v'+version+'.tar.gz',
+    download_url='https://github.com/Creativelair/Bottle-Opentracing/archive/v0.0.4.tar.gz',
     license='BSD',
     author='Daniel Jimenez',
     author_email='danijimenez010@gmail.com',
